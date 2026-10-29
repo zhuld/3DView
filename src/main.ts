@@ -20,7 +20,7 @@ const HEAD_ROTATION_GAIN = 1.2;
 const MAX_HEAD_YAW = 0.55;
 const MAX_HEAD_PITCH = 0.4;
 const BACKGROUND_COLOR_STORAGE_KEY = '3dview.backgroundColor';
-const DEFAULT_BACKGROUND_COLOR = '#07090d';
+const DEFAULT_BACKGROUND_COLOR = '#2b477e';
 
 /** 按 id 取元素，缺失时立即抛错，避免后面出现难排查的空引用。 */
 function element<T extends HTMLElement>(id: string): T {
