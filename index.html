@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="3D viewer with head-motion parallax and pinch-gesture rotation, powered by MediaPipe and three.js."
+    />
+    <title>3DView · 头动视差 · 手势旋转</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <canvas id="view"></canvas>
+
+    <header id="statusbar">
+      <div class="brand">
+        <span class="dot" id="live-dot"></span>
+        <strong>3DView</strong>
+      </div>
+      <div class="chips">
+        <span class="chip" id="chip-fps">-- FPS</span>
+        <span class="chip" id="chip-face" data-state="off" data-i18n="chip.face">面部</span>
+        <span class="chip" id="chip-hand" data-state="off" data-i18n="chip.hand">手部</span>
+        <span class="chip" id="chip-backend">--</span>
+      </div>
+    </header>
+
+    <div id="toast" role="status" hidden></div>
+
+    <aside id="panel">
+      <button id="panel-toggle" class="panel-toggle" aria-expanded="true" aria-label="Toggle panel">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="panel-body">
+        <section>
+          <h2 data-i18n="panel.parallax">头动视差</h2>
+          <label class="row switch">
+            <input type="checkbox" id="opt-parallax" checked />
+            <span data-i18n="panel.parallax.enable">启用</span>
+          </label>
+          <label class="row">
+            <span data-i18n="panel.parallax.gain">视差强度</span>
+            <input type="range" id="opt-gain" min="0" max="2.5" step="0.05" value="1" />
+            <output id="out-gain">1.00</output>
+          </label>
+          <label class="row">
+            <span data-i18n="panel.parallax.distance">观看距离</span>
+            <input type="range" id="opt-distance" min="1.4" max="4" step="0.05" value="2.4" />
+            <output id="out-distance">2.40</output>
+          </label>
+          <button class="btn" id="btn-calibrate" data-i18n="panel.parallax.calibrate">重新校准</button>
+        </section>
+
+        <section>
+          <h2 data-i18n="panel.gesture">手势</h2>
+          <label class="row switch">
+            <input type="checkbox" id="opt-gesture" checked />
+            <span data-i18n="panel.gesture.enable">捏合拖拽旋转</span>
+          </label>
+          <label class="row">
+            <span data-i18n="panel.gesture.sensitivity">灵敏度</span>
+            <input type="range" id="opt-sensitivity" min="0.2" max="2" step="0.05" value="1" />
+            <output id="out-sensitivity">1.00</output>
+          </label>
+          <label class="row switch">
+            <input type="checkbox" id="opt-landmarks" checked />
+            <span data-i18n="panel.gesture.landmarks">显示关键点</span>
+          </label>
+        </section>
+
+        <section>
+          <h2 data-i18n="panel.model">模型</h2>
+          <label class="row">
+            <span data-i18n="panel.model.preset">内置</span>
+            <select id="opt-preset">
+              <option value="torusKnot" data-i18n="model.torusKnot">环面纽结</option>
+              <option value="icosahedron" data-i18n="model.icosahedron">二十面体</option>
+              <option value="sphere" data-i18n="model.sphere">球体</option>
+              <option value="box" data-i18n="model.box">立方体</option>
+              <option value="torus" data-i18n="model.torus">圆环</option>
+            </select>
+          </label>
+          <button class="btn" id="btn-open" data-i18n="panel.model.open">打开本地文件…</button>
+          <input type="file" id="file-input" accept=".glb,.gltf,.obj" hidden />
+          <label class="row switch">
+            <input type="checkbox" id="opt-autorotate" />
+            <span data-i18n="panel.model.autorotate">自动旋转</span>
+          </label>
+          <button class="btn" id="btn-reset" data-i18n="panel.model.reset">重置视角</button>
+        </section>
+
+        <section>
+          <h2 data-i18n="panel.display">显示</h2>
+          <label class="row switch">
+            <input type="checkbox" id="opt-ground" checked />
+            <span data-i18n="panel.display.ground">显示地面</span>
+          </label>
+          <label class="row switch">
+            <input type="checkbox" id="opt-background" checked />
+            <span data-i18n="panel.display.background">显示背景</span>
+          </label>
+          <label class="row">
+            <span data-i18n="panel.display.backgroundColor">背景颜色</span>
+            <input type="color" id="opt-background-color" value="#3eb3c4" />
+          </label>
+        </section>
+
+        <section>
+          <h2 data-i18n="panel.system">系统</h2>
+          <label class="row switch">
+            <input type="checkbox" id="opt-camera" checked />
+            <span data-i18n="panel.system.camera">使用摄像头</span>
+          </label>
+          <label class="row">
+            <span data-i18n="panel.system.language">语言</span>
+            <select id="opt-language">
+              <option value="zh">中文</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+        </section>
+      </div>
+    </aside>
+
+    <div id="preview-card" hidden>
+      <div id="preview-video"></div>
+      <canvas id="preview-canvas" width="240" height="180"></canvas>
+      <div class="hint" data-i18n="preview.hint">捏合拇指与食指并拖动即可旋转</div>
+    </div>
+
+    <div id="drop-hint" hidden>
+      <span data-i18n="drop.hint">松开以载入模型 (.glb / .gltf / .obj)</span>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

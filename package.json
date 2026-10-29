@@ -1,0 +1,26 @@
+{
+  "name": "3dview",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "3D object viewer with head-motion parallax and pinch-gesture rotation",
+  "license": "MIT",
+  "scripts": {
+    "predev": "node scripts/fetch-assets.mjs",
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "prebuild": "node scripts/fetch-assets.mjs",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^1.1.1",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/three": "^0.186.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  }
+}
