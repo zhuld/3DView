@@ -126,6 +126,10 @@ src/
 - **视差方向反了**：若你的摄像头是特殊朝向（如倒装），可调整 `headPose.ts` 中 `readEyes()` 的符号。
 - **`.gltf` 加载失败**：带外部 `.bin` / 贴图的 glTF 需要与其资源同目录托管，建议先合并为 `.glb`。
 - **模型或 wasm 缺失**：重新执行 `npm install`（或 `node scripts/fetch-assets.mjs`）会补齐 `public/models`、`public/wasm`。
+- **线上页面空白、看不到模型，本地却正常**：确认 **Settings → Pages → Source** 是 **GitHub Actions**。
+  若仍是 **Deploy from a branch**，GitHub 会用 Jekyll 直接发布仓库源码，线上拿到的是未经 Vite 构建的
+  `index.html`（其中 `<script src="/src/main.ts">` 无法执行），页面自然是空的；此时工作流里上传的
+  `dist/` 产物不会被使用。改回 **GitHub Actions** 后重新运行一次 `Deploy to GitHub Pages` 即可。
 
 ## 验收清单
 
