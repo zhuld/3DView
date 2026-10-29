@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { clamp } from './util/math';
 import { createViewport } from './scene/renderer';
 import { ParallaxCamera } from './scene/parallaxCamera';
 import { ModelStage } from './scene/modelStage';
@@ -11,9 +12,6 @@ import { PointerRotator } from './input/pointerFallback';
 import { PreviewOverlay } from './ui/overlay';
 import { Panel } from './ui/panel';
 import { detectLang, I18n } from './ui/i18n';
-
-const clamp = (value: number, min: number, max: number): number =>
-  Math.min(Math.max(value, min), max);
 
 /** 头部偏移到模型旋转的增益，以及偏航 / 俯仰的上限（弧度）。 */
 const HEAD_ROTATION_GAIN = 1.2;
@@ -125,7 +123,6 @@ const panel = new Panel(i18n, {
     if (enabled) void startTracking();
     else stopTracking();
   },
-  onLanguage: () => undefined,
 });
 panel.setBackgroundColor(backgroundColor);
 

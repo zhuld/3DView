@@ -271,4 +271,11 @@ export class ModelStage {
     this.disposables = [];
     this.pickables.length = 0;
   }
+
+  /** 释放所有 GPU 资源（几何体、材质、贴图等），页面卸载前调用。 */
+  dispose(): void {
+    this.clear();
+    this.group.remove(this.headMotion);
+    this.headMotion.remove(this.holder);
+  }
 }

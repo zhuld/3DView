@@ -1,4 +1,5 @@
 import type { FaceLandmarkerResult, NormalizedLandmark } from '@mediapipe/tasks-vision';
+import { clamp } from '../util/math';
 import { OneEuroFilter } from '../util/oneEuroFilter';
 
 export interface HeadSample {
@@ -24,9 +25,6 @@ const LOST_GRACE_MS = 250;
 const FILTER_RESET_MS = 900;
 /** 失去人脸后回中的时间常数（秒），越小回中越快。 */
 const RECENTER_SECONDS = 0.35;
-
-const clamp = (value: number, min: number, max: number): number =>
-  Math.min(Math.max(value, min), max);
 
 /** 取中位数，用于校准：比平均值更能抵抗个别异常帧的影响。 */
 function median(values: number[]): number {

@@ -1,8 +1,6 @@
 import * as THREE from 'three';
+import { clamp } from '../util/math';
 import type { HeadSample } from '../tracking/headPose';
-
-const clamp = (value: number, min: number, max: number): number =>
-  Math.min(Math.max(value, min), max);
 
 /** 头部偏移转化为相机位移时的衰减系数，让视差只在轻微范围内起作用。 */
 const POSITIONAL_GAIN = 0.2;

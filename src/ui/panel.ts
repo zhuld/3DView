@@ -1,4 +1,3 @@
-import type { Lang } from './i18n';
 import { I18n } from './i18n';
 import type { PresetName } from '../scene/modelStage';
 
@@ -19,7 +18,6 @@ export interface PanelHandlers {
   onAutoRotate: (enabled: boolean) => void;
   onReset: () => void;
   onCameraToggle: (enabled: boolean) => void;
-  onLanguage: (lang: Lang) => void;
 }
 
 /** 按 id 取元素，缺失时直接抛错，便于尽早暴露模板与代码不一致的问题。 */
@@ -136,7 +134,6 @@ export class Panel {
       const next = this.language.value === 'en' ? 'en' : 'zh';
       this.i18n.setLang(next);
       this.i18n.apply();
-      handlers.onLanguage(next);
     });
 
     this.panelToggle.addEventListener('click', () => {
