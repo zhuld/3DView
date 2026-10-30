@@ -47,10 +47,12 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'theme.light': '浅色',
 
     'model.torusKnot': '环面纽结',
-    'model.icosahedron': '二十面体',
-    'model.sphere': '球体',
-    'model.box': '立方体',
-    'model.torus': '圆环',
+    'model.mobius': '莫比乌斯环',
+    'model.helix': '螺旋弹簧',
+    'model.knot': '复杂纽结',
+    'model.superformula': '超公式曲面',
+    'model.bicycle': '自行车',
+    'model.propeller': '螺旋桨',
 
     'preview.hint': '捏合拇指与食指并拖动即可旋转',
     'drop.hint': '松开以载入模型 (.glb / .gltf / .obj)',
@@ -110,10 +112,12 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'theme.light': 'Light',
 
     'model.torusKnot': 'Torus knot',
-    'model.icosahedron': 'Icosahedron',
-    'model.sphere': 'Sphere',
-    'model.box': 'Cube',
-    'model.torus': 'Torus',
+    'model.mobius': 'Möbius strip',
+    'model.helix': 'Helix spring',
+    'model.knot': 'Complex knot',
+    'model.superformula': 'Superformula surface',
+    'model.bicycle': 'Bicycle',
+    'model.propeller': 'Propeller',
 
     'preview.hint': 'Pinch thumb + index and drag to rotate',
     'drop.hint': 'Drop to load a model (.glb / .gltf / .obj)',

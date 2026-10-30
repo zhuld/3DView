@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { DEFAULT_PRESET, type PresetName, PRESETS } from './models/index';
 
-export type PresetName = 'torusKnot' | 'icosahedron' | 'sphere' | 'box' | 'torus';
+export type { PresetName };
 
 // 旋转轴固定为世界坐标系的 Y（偏航）与 X（俯仰），不随模型自身朝向变化。
 const WORLD_UP = new THREE.Vector3(0, 1, 0);
@@ -10,34 +11,7 @@ const WORLD_RIGHT = new THREE.Vector3(1, 0, 0);
 /** 归一化后模型的最大边长，保证不同尺寸的模型在画面中观感一致。 */
 const FIT_SIZE = 1.6;
 
-interface PresetDefinition {
-  color: number;
-  build: () => THREE.BufferGeometry;
-}
-
-/** 内置几何体预设：颜色 + 几何体构造函数。 */
-const PRESETS: Record<PresetName, PresetDefinition> = {
-  torusKnot: {
-    color: 0x6ee7d7,
-    build: () => new THREE.TorusKnotGeometry(0.62, 0.21, 240, 32, 2, 3),
-  },
-  icosahedron: {
-    color: 0xb9a7fb,
-    build: () => new THREE.IcosahedronGeometry(0.98, 0),
-  },
-  sphere: {
-    color: 0x8ab6fd,
-    build: () => new THREE.SphereGeometry(0.92, 64, 48),
-  },
-  box: {
-    color: 0xfbd15b,
-    build: () => new THREE.BoxGeometry(1.35, 1.35, 1.35),
-  },
-  torus: {
-    color: 0xf6a8cf,
-    build: () => new THREE.TorusGeometry(0.74, 0.28, 48, 96),
-  },
-};
+// 模型预设定义已独立到 src/scene/models/ 目录，此处统一由 ./models/index 聚合。
 
 /** 需要在销毁时显式释放的 GPU 资源。 */
 type Disposable = THREE.BufferGeometry | THREE.Material;
@@ -87,7 +61,7 @@ export class ModelStage {
   private readonly gltfLoader = new GLTFLoader();
   private readonly objLoader = new OBJLoader();
   private disposables: Disposable[] = [];
-  private preset: PresetName = 'torusKnot';
+  private preset: PresetName = DEFAULT_PRESET;
 
   constructor(scene: THREE.Scene, depth = 1.8) {
     // 模型放到 z = 0 平面之后，离轴相机移动时才会产生运动视差。
@@ -99,13 +73,31 @@ export class ModelStage {
     this.setPreset(this.preset);
   }
 
-  /** 切换到内置几何体预设，并释放上一个模型的资源。 */
+  /** 切换到内置预设，并释放上一个模型的资源。 */
   setPreset(name: PresetName): void {
     const definition = PRESETS[name] ?? PRESETS.torusKnot;
     this.preset = name;
     this.clear();
 
-    const geometry = definition.build();
+    const built = definition.build();
+
+    // 多部件组合模型（如自行车、螺旋桨）：build 返回 Group
+    if (built instanceof THREE.Group) {
+      const root = built;
+      root.name = name;
+      root.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+      this.holder.add(root);
+      this.collect(root);
+      return;
+    }
+
+    // 单一几何体模型
+    const geometry = built;
     const material = this.createMaterial(definition.color);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.castShadow = true;
