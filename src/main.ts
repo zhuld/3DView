@@ -174,7 +174,6 @@ async function startTracking(): Promise<void> {
         message: error instanceof Error ? error.message : String(error),
       }),
       'error',
-      8000,
     );
     trackingStarting = false;
     return;
@@ -230,7 +229,7 @@ function showCameraError(error: unknown): void {
           : code === 'unsupported'
             ? 'toast.cameraUnsupported'
             : 'toast.cameraUnknown';
-  panel.toast(i18n.t(key, { message }), 'error', 8000);
+  panel.toast(i18n.t(key, { message }), 'error');
 }
 
 let handTick = 0;
@@ -275,7 +274,6 @@ async function loadModelFile(file: File): Promise<void> {
         message: error instanceof Error ? error.message : String(error),
       }),
       'error',
-      7000,
     );
   }
 }

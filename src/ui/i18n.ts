@@ -35,7 +35,18 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
 
     'panel.system': '系统',
     'panel.system.camera': '使用摄像头',
+    'panel.system.theme': '主题',
     'panel.system.language': '语言',
+    'panel.expand': '展开设置面板',
+    'panel.collapse': '收起设置面板',
+
+    'state.off': '已关闭',
+    'state.on': '追踪中',
+    'state.warn': '未检测到',
+
+    'theme.auto': '跟随系统',
+    'theme.dark': '深色',
+    'theme.light': '浅色',
 
     'model.torusKnot': '环面纽结',
     'model.icosahedron': '二十面体',
@@ -61,6 +72,7 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'toast.cameraUnknown': '摄像头启动失败：{message}',
     'toast.gpuFallback': 'GPU 加速不可用，已回退到 CPU 识别（帧率可能下降）',
     'toast.modelsFailed': '识别模型加载失败：{message}',
+    'toast.close': '关闭提示',
   },
   en: {
     'app.title': '3DView · Head Parallax · Pinch Rotate',
@@ -92,7 +104,18 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
 
     'panel.system': 'System',
     'panel.system.camera': 'Use camera',
+    'panel.system.theme': 'Theme',
     'panel.system.language': 'Language',
+    'panel.expand': 'Open settings panel',
+    'panel.collapse': 'Close settings panel',
+
+    'state.off': 'off',
+    'state.on': 'tracking',
+    'state.warn': 'not detected',
+
+    'theme.auto': 'System',
+    'theme.dark': 'Dark',
+    'theme.light': 'Light',
 
     'model.torusKnot': 'Torus knot',
     'model.icosahedron': 'Icosahedron',
@@ -118,6 +141,7 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'toast.cameraUnknown': 'Camera failed to start: {message}',
     'toast.gpuFallback': 'GPU delegate unavailable, falling back to CPU tracking',
     'toast.modelsFailed': 'Failed to load vision models: {message}',
+    'toast.close': 'Dismiss notification',
   },
 };
 
@@ -158,6 +182,11 @@ export class I18n {
     for (const element of root.querySelectorAll<HTMLElement>('[data-i18n]')) {
       const key = element.dataset.i18n;
       if (key) element.textContent = this.t(key);
+    }
+    // 图标按钮 / 只有 aria-label 的控件，用单独的属性标记，避免覆盖其可见文本。
+    for (const element of root.querySelectorAll<HTMLElement>('[data-i18n-aria-label]')) {
+      const key = element.dataset.i18nAriaLabel;
+      if (key) element.setAttribute('aria-label', this.t(key));
     }
   }
 }

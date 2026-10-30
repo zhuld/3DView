@@ -3,12 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="dark light" />
     <meta
       name="description"
       content="3D viewer with head-motion parallax and pinch-gesture rotation, powered by MediaPipe and three.js."
     />
     <title>3DView · 头动视差 · 手势旋转</title>
+    <script>
+      // 在样式生效前确定主题，避免首屏在深色 / 浅色之间闪烁。
+      // 与 src/ui/theme.ts 共用同一个存储键与解析规则。
+      (() => {
+        try {
+          const stored = localStorage.getItem('3dview.theme');
+          const preference = stored === 'dark' || stored === 'light' ? stored : 'auto';
+          const dark =
+            preference === 'dark' ||
+            (preference === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        } catch {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
@@ -25,12 +41,16 @@
         <span class="chip" id="chip-hand" data-state="off" data-i18n="chip.hand">手部</span>
         <span class="chip" id="chip-backend">--</span>
       </div>
+      <span id="tracking-status" class="sr-only" role="status" aria-live="polite"></span>
     </header>
 
-    <div id="toast" role="status" hidden></div>
+    <div id="toast" hidden>
+      <span id="toast-text" role="status" aria-live="polite"></span>
+      <button type="button" id="toast-close" class="toast-close" aria-label="关闭提示" data-i18n-aria-label="toast.close">×</button>
+    </div>
 
     <aside id="panel">
-      <button id="panel-toggle" class="panel-toggle" aria-expanded="true" aria-label="Toggle panel">
+      <button id="panel-toggle" class="panel-toggle" aria-expanded="true" aria-label="收起设置面板">
         <span></span><span></span><span></span>
       </button>
       <div class="panel-body">
@@ -112,6 +132,14 @@
           <label class="row switch">
             <input type="checkbox" id="opt-camera" checked />
             <span data-i18n="panel.system.camera">使用摄像头</span>
+          </label>
+          <label class="row">
+            <span data-i18n="panel.system.theme">主题</span>
+            <select id="opt-theme">
+              <option value="auto" data-i18n="theme.auto">跟随系统</option>
+              <option value="dark" data-i18n="theme.dark">深色</option>
+              <option value="light" data-i18n="theme.light">浅色</option>
+            </select>
           </label>
           <label class="row">
             <span data-i18n="panel.system.language">语言</span>
