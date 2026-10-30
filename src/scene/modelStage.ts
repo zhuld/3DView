@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import { DEFAULT_PRESET, type PresetName, PRESETS } from './models/index';
+import { DEFAULT_PRESET, type PresetDefinition, type PresetName, PRESETS } from './models/index';
+import { createMetalMaterial } from './models/materials';
 
 export type { PresetName };
 
@@ -62,6 +63,12 @@ export class ModelStage {
   private readonly objLoader = new OBJLoader();
   private disposables: Disposable[] = [];
   private preset: PresetName = DEFAULT_PRESET;
+  /** 当前预设的逐帧动画（若存在），与模型根节点一起驱动。 */
+  private animator: PresetDefinition['animate'];
+  /** 模型根节点：内置预设为 Group 或 Mesh，导入文件为归一化包装 Group。 */
+  private modelRoot: THREE.Object3D | null = null;
+  /** 自切换预设以来的累计秒数，作为动画的时间基准。 */
+  private animationTime = 0;
 
   constructor(scene: THREE.Scene, depth = 1.8) {
     // 模型放到 z = 0 平面之后，离轴相机移动时才会产生运动视差。
@@ -77,6 +84,8 @@ export class ModelStage {
   setPreset(name: PresetName): void {
     const definition = PRESETS[name] ?? PRESETS.torusKnot;
     this.preset = name;
+    this.animator = definition.animate;
+    this.animationTime = 0;
     this.clear();
 
     const built = definition.build();
@@ -92,13 +101,14 @@ export class ModelStage {
         }
       });
       this.holder.add(root);
+      this.modelRoot = root;
       this.collect(root);
       return;
     }
 
     // 单一几何体模型
     const geometry = built;
-    const material = this.createMaterial(definition.color);
+    const material = this.createMaterial(definition.color, definition.material);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -106,6 +116,7 @@ export class ModelStage {
 
     this.disposables.push(geometry, material);
     this.holder.add(mesh);
+    this.modelRoot = mesh;
     this.pickables.push(mesh);
   }
 
@@ -157,9 +168,13 @@ export class ModelStage {
     if (meshCount === 0) throw new Error('模型中没有网格 / the file contains no meshes');
 
     this.clear();
+    // 导入文件不参与内置动画。
+    this.animator = undefined;
+    this.animationTime = 0;
     // 传入 2 倍目标尺寸，让用户导入的模型比内置预设略大一些。
     const wrapper = this.fitToStage(object, FIT_SIZE * 2);
     this.holder.add(wrapper);
+    this.modelRoot = wrapper;
     this.collect(wrapper);
     return file.name;
   }
@@ -204,23 +219,26 @@ export class ModelStage {
     this.group.quaternion.identity();
   }
 
-  /** 每帧更新，目前只处理自动旋转。 */
+  /** 每帧更新：自动旋转与当前预设的内置动画。 */
   update(deltaSeconds: number): void {
     if (this.autoRotate) {
       this.group.rotateOnWorldAxis(WORLD_UP, this.autoRotateSpeed * deltaSeconds);
     }
+
+    // 内置动画只作用在模型内部节点，不改动 group / headMotion，
+    // 因此与手势旋转、自动旋转、头动视差互不覆盖。
+    if (this.animator && this.modelRoot) {
+      this.animationTime += deltaSeconds;
+      this.animator(this.modelRoot, this.animationTime);
+    }
   }
 
   /** 统一的金属质感材质，内置预设与缺失材质的导入模型共用。 */
-  private createMaterial(color: number): THREE.MeshPhysicalMaterial {
-    return new THREE.MeshPhysicalMaterial({
-      color,
-      metalness: 0.4,
-      roughness: 0.24,
-      clearcoat: 0.65,
-      clearcoatRoughness: 0.22,
-      envMapIntensity: 1.1,
-    });
+  private createMaterial(
+    color: number,
+    override?: THREE.MeshPhysicalMaterialParameters,
+  ): THREE.MeshPhysicalMaterial {
+    return createMetalMaterial(color, override);
   }
 
   /**
@@ -262,5 +280,6 @@ export class ModelStage {
     for (const disposable of this.disposables) disposable.dispose();
     this.disposables = [];
     this.pickables.length = 0;
+    this.modelRoot = null;
   }
 }

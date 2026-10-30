@@ -53,6 +53,10 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'model.superformula': '超公式曲面',
     'model.bicycle': '自行车',
     'model.propeller': '螺旋桨',
+    'model.dna': 'DNA 双螺旋',
+    'model.lorenz': '洛伦兹吸引子',
+    'model.sierpinski': '谢尔宾斯基四面体',
+    'model.gyroscope': '陀螺仪',
 
     'preview.hint': '捏合拇指与食指并拖动即可旋转',
     'drop.hint': '松开以载入模型 (.glb / .gltf / .obj)',
@@ -118,6 +122,10 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'model.superformula': 'Superformula surface',
     'model.bicycle': 'Bicycle',
     'model.propeller': 'Propeller',
+    'model.dna': 'DNA double helix',
+    'model.lorenz': 'Lorenz attractor',
+    'model.sierpinski': 'Sierpinski tetrahedron',
+    'model.gyroscope': 'Gyroscope',
 
     'preview.hint': 'Pinch thumb + index and drag to rotate',
     'drop.hint': 'Drop to load a model (.glb / .gltf / .obj)',
