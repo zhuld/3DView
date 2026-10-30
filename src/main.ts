@@ -17,8 +17,8 @@ import { detectLang, I18n } from './ui/i18n';
 const HEAD_ROTATION_GAIN = 1.2;
 const MAX_HEAD_YAW = 0.55;
 const MAX_HEAD_PITCH = 0.4;
-const BACKGROUND_COLOR_STORAGE_KEY = '3dview.backgroundColor';
-const DEFAULT_BACKGROUND_COLOR = '#2b477e';
+/** 样式表变量缺失或非法时的兜底背景色，与 style.css 的 --stage-bg 保持一致。 */
+const FALLBACK_STAGE_COLOR = '#364a66';
 
 /** 按 id 取元素，缺失时立即抛错，避免后面出现难排查的空引用。 */
 function element<T extends HTMLElement>(id: string): T {
@@ -27,12 +27,14 @@ function element<T extends HTMLElement>(id: string): T {
   return found as T;
 }
 
-// 读取上次保存的背景颜色，并做格式校验，非法值回退到默认色。
-const storedBackgroundColor = localStorage.getItem(BACKGROUND_COLOR_STORAGE_KEY);
-const backgroundColor =
-  storedBackgroundColor && /^#[\da-f]{6}$/i.test(storedBackgroundColor)
-    ? storedBackgroundColor
-    : DEFAULT_BACKGROUND_COLOR;
+/**
+ * 3D 舞台背景色以样式表变量 --stage-bg 为准，让配色只维护一份。
+ * 该变量两套主题共用，所以这里不需要监听主题切换。
+ */
+function readStageColor(): string {
+  const value = getComputedStyle(document.documentElement).getPropertyValue('--stage-bg').trim();
+  return /^#[\da-f]{6}$/i.test(value) ? value : FALLBACK_STAGE_COLOR;
+}
 
 const i18n = new I18n(detectLang());
 const headPose = new HeadPoseEstimator();
@@ -40,7 +42,7 @@ const parallax = new ParallaxCamera();
 
 const canvas = element<HTMLCanvasElement>('view');
 const viewport = createViewport(canvas, parallax.camera, {
-  backgroundColor,
+  backgroundColor: readStageColor(),
   onAspectChange: (aspect) => parallax.setAspect(aspect),
 });
 
@@ -85,10 +87,6 @@ const panel = new Panel(i18n, {
   onBackgroundToggle: (visible) => {
     viewport.setBackgroundVisible(visible);
   },
-  onBackgroundColor: (color) => {
-    viewport.setBackgroundColor(color);
-    localStorage.setItem(BACKGROUND_COLOR_STORAGE_KEY, color);
-  },
   onCalibrate: () => {
     // 触发一次定时校准，并在按钮上做短暂的防重复点击处理。
     headPose.beginCalibration(performance.now());
@@ -124,7 +122,6 @@ const panel = new Panel(i18n, {
     else stopTracking();
   },
 });
-panel.setBackgroundColor(backgroundColor);
 
 // 头动校准应等用户坐定后再进行；估计器自身也会在最初若干帧自动校准。
 let calibrationRequested = false;

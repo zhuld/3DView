@@ -13,9 +13,7 @@ export interface Viewport {
   setGroundHeadRotation(rotation: THREE.Quaternion, pivot: THREE.Vector3): void;
   /** 显示 / 隐藏纯色背景（隐藏后为透明，露出页面底色）。 */
   setBackgroundVisible(visible: boolean): void;
-  setBackgroundColor(color: string): void;
   render(): void;
-  dispose(): void;
 }
 
 export interface ViewportOptions {
@@ -141,15 +139,6 @@ export function createViewport(
       scene.background = visible ? backgroundColor : null;
       document.documentElement.dataset.backgroundHidden = String(!visible);
     },
-    setBackgroundColor: (color) => backgroundColor.set(color),
     render: () => renderer.render(scene, camera),
-    dispose: () => {
-      window.removeEventListener('resize', resize);
-      grid.geometry.dispose();
-      groundShadow.geometry.dispose();
-      (groundShadow.material as THREE.Material).dispose();
-      environment.dispose();
-      renderer.dispose();
-    },
   };
 }

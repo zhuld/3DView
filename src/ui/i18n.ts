@@ -7,7 +7,6 @@ const STORAGE_KEY = '3dview.lang';
 const DICTIONARIES: Record<Lang, Record<string, string>> = {
   zh: {
     'app.title': '3DView · 头动视差 · 手势旋转',
-    'app.subtitle': '头动视差 · 手势旋转',
     'chip.face': '面部',
     'chip.hand': '手部',
 
@@ -31,7 +30,6 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'panel.display': '显示',
     'panel.display.ground': '显示地面',
     'panel.display.background': '显示背景',
-    'panel.display.backgroundColor': '背景颜色',
 
     'panel.system': '系统',
     'panel.system.camera': '使用摄像头',
@@ -57,12 +55,8 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'preview.hint': '捏合拇指与食指并拖动即可旋转',
     'drop.hint': '松开以载入模型 (.glb / .gltf / .obj)',
 
-    'status.loadingModels': '正在加载识别模型…',
-    'status.ready': '识别已就绪',
     'status.calibrating': '校准中，请正对摄像头保持不动…',
-    'status.noFace': '未检测到面部',
 
-    'toast.calibrated': '校准完成',
     'toast.modelLoaded': '已载入 {name}',
     'toast.loadFailed': '载入失败：{message}',
     'toast.cameraDenied': '摄像头权限被拒绝，已切换为鼠标 / 触摸操作',
@@ -76,7 +70,6 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
   },
   en: {
     'app.title': '3DView · Head Parallax · Pinch Rotate',
-    'app.subtitle': 'head parallax · pinch rotate',
     'chip.face': 'Face',
     'chip.hand': 'Hand',
 
@@ -100,7 +93,6 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'panel.display': 'Display',
     'panel.display.ground': 'Show ground',
     'panel.display.background': 'Show background',
-    'panel.display.backgroundColor': 'Background color',
 
     'panel.system': 'System',
     'panel.system.camera': 'Use camera',
@@ -126,12 +118,8 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'preview.hint': 'Pinch thumb + index and drag to rotate',
     'drop.hint': 'Drop to load a model (.glb / .gltf / .obj)',
 
-    'status.loadingModels': 'Loading vision models…',
-    'status.ready': 'Tracking ready',
     'status.calibrating': 'Calibrating, please face the camera…',
-    'status.noFace': 'No face detected',
 
-    'toast.calibrated': 'Calibration complete',
     'toast.modelLoaded': 'Loaded {name}',
     'toast.loadFailed': 'Failed to load: {message}',
     'toast.cameraDenied': 'Camera permission denied — using mouse / touch instead',

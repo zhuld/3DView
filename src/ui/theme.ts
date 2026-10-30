@@ -12,7 +12,7 @@ export function detectThemePreference(): ThemePreference {
 }
 
 /** 把偏好解析为实际生效的主题。 */
-export function resolveTheme(preference: ThemePreference): ResolvedTheme {
+function resolveTheme(preference: ThemePreference): ResolvedTheme {
   if (preference !== 'auto') return preference;
   return darkQuery.matches ? 'dark' : 'light';
 }

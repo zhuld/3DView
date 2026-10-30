@@ -11,9 +11,6 @@ export type Delegate = 'GPU' | 'CPU';
 export class FaceTracker {
   private landmarker: FaceLandmarker | null = null;
   private readonly clock = new MonotonicClock();
-  /** 实际使用的推理后端，init() 完成后才有值。 */
-  backend: Delegate | null = null;
-  lastResult: FaceLandmarkerResult | null = null;
 
   /** 初始化识别器；优先使用 GPU，失败时自动回退到 CPU。 */
   async init(): Promise<Delegate> {
@@ -33,17 +30,15 @@ export class FaceTracker {
 
     try {
       this.landmarker = await FaceLandmarker.createFromOptions(fileset, options);
-      this.backend = 'GPU';
+      return 'GPU';
     } catch (gpuError) {
       console.warn('[face] GPU delegate unavailable, falling back to CPU', gpuError);
       this.landmarker = await FaceLandmarker.createFromOptions(fileset, {
         ...options,
         baseOptions: { modelAssetPath, delegate: 'CPU' },
       });
-      this.backend = 'CPU';
+      return 'CPU';
     }
-
-    return this.backend;
   }
 
   /** 对当前视频帧做一次检测；视频尚未就绪或检测异常时返回 null。 */
@@ -51,8 +46,7 @@ export class FaceTracker {
     if (!this.landmarker || video.readyState < 2) return null;
     try {
       // MediaPipe 的 VIDEO 模式要求时间戳严格递增，这里统一做单调处理。
-      this.lastResult = this.landmarker.detectForVideo(video, this.clock.next(timeMs));
-      return this.lastResult;
+      return this.landmarker.detectForVideo(video, this.clock.next(timeMs));
     } catch (error) {
       console.warn('[face] detection failed', error);
       return null;
@@ -63,7 +57,5 @@ export class FaceTracker {
   close(): void {
     this.landmarker?.close();
     this.landmarker = null;
-    this.backend = null;
-    this.lastResult = null;
   }
 }

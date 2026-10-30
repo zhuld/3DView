@@ -2,6 +2,9 @@
   color-scheme: dark;
 
   --bg: #07090d;
+  /* 3D 舞台背景色：两套主题共用一个值。内置模型都是淡彩色，
+     浅色画布会让它们糊掉（对比度仅 1.4–1.9:1），所以这里固定为中深蓝灰。 */
+  --stage-bg: #364a66;
   --fg: #e8eef7;
   --muted: #8b98ab;
   --glass: rgba(18, 23, 33, 0.9);
@@ -170,11 +173,6 @@ html[data-theme="light"] .panel-toggle {
   gap: 8px;
   font-size: 15px;
   letter-spacing: 0.3px;
-}
-
-.brand .tag {
-  color: var(--muted);
-  font-size: 12px;
 }
 
 .brand .dot {
@@ -374,22 +372,6 @@ select option:checked,
 select option:active {
   background: var(--accent);
   color: var(--on-accent);
-}
-
-.row input[type="color"] {
-  width: 42px;
-  height: 28px;
-  margin-left: auto;
-  padding: 4px;
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  background: var(--input-bg);
-  cursor: pointer;
-}
-
-.row input[type="color"]:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }
 
 .row select:focus-visible,
@@ -613,10 +595,6 @@ select option:active {
 
   #preview-card {
     width: 150px;
-  }
-
-  #statusbar .tag {
-    display: none;
   }
 }
 

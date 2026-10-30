@@ -3,7 +3,7 @@ import { FilesetResolver } from '@mediapipe/tasks-vision';
 type VisionFileset = Awaited<ReturnType<typeof FilesetResolver.forVisionTasks>>;
 
 /** 应用部署后的基础 URL（自动兼容 GitHub Pages 的子路径）。 */
-export const assetBase = new URL(import.meta.env.BASE_URL, window.location.href);
+const assetBase = new URL(import.meta.env.BASE_URL, window.location.href);
 
 /** 把相对路径解析为最终可访问的绝对 URL。 */
 export function assetUrl(relativePath: string): string {

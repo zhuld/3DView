@@ -15,7 +15,6 @@ export interface PanelHandlers {
   onDistance: (value: number) => void;
   onGroundToggle: (visible: boolean) => void;
   onBackgroundToggle: (visible: boolean) => void;
-  onBackgroundColor: (color: string) => void;
   onCalibrate: () => void;
   onGestureToggle: (enabled: boolean) => void;
   onSensitivity: (value: number) => void;
@@ -60,7 +59,6 @@ export class Panel {
   private readonly distanceOutput = element<HTMLOutputElement>('out-distance');
   private readonly groundToggle = element<HTMLInputElement>('opt-ground');
   private readonly backgroundToggle = element<HTMLInputElement>('opt-background');
-  private readonly backgroundColor = element<HTMLInputElement>('opt-background-color');
   private readonly gestureToggle = element<HTMLInputElement>('opt-gesture');
   private readonly sensitivity = element<HTMLInputElement>('opt-sensitivity');
   private readonly sensitivityOutput = element<HTMLOutputElement>('out-sensitivity');
@@ -92,7 +90,7 @@ export class Panel {
   private handState: ChipState = 'off';
 
   constructor(
-    readonly i18n: I18n,
+    private readonly i18n: I18n,
     handlers: PanelHandlers,
   ) {
     this.language.value = i18n.lang;
@@ -113,9 +111,6 @@ export class Panel {
     );
     this.backgroundToggle.addEventListener('change', () =>
       handlers.onBackgroundToggle(this.backgroundToggle.checked),
-    );
-    this.backgroundColor.addEventListener('input', () =>
-      handlers.onBackgroundColor(this.backgroundColor.value),
     );
     element<HTMLButtonElement>('btn-calibrate').addEventListener('click', () =>
       handlers.onCalibrate(),
@@ -235,21 +230,9 @@ export class Panel {
     return this.sensitivity.valueAsNumber;
   }
 
-  get parallaxEnabled(): boolean {
-    return this.parallaxToggle.checked;
-  }
-
-  get gestureEnabled(): boolean {
-    return this.gestureToggle.checked;
-  }
-
   /** 同步摄像头开关的勾选状态（摄像头启动失败或被关闭时调用）。 */
   setCameraToggle(enabled: boolean): void {
     this.cameraToggle.checked = enabled;
-  }
-
-  setBackgroundColor(color: string): void {
-    this.backgroundColor.value = color;
   }
 
   /** 更新观看距离滑杆及其数值标签（滚轮缩放时同步）。 */
@@ -328,7 +311,7 @@ export class Panel {
   }
 
   /** 立即隐藏提示条并清除定时器。 */
-  hideToast(): void {
+  private hideToast(): void {
     window.clearTimeout(this.toastTimer);
     this.toastElement.hidden = true;
   }
