@@ -114,6 +114,9 @@ const panel = new Panel(i18n, {
   onAutoRotate: (enabled) => {
     stage.autoRotate = enabled;
   },
+  onAnimationsToggle: (enabled) => {
+    stage.animationsEnabled = enabled;
+  },
   onReset: () => {
     stage.reset();
   },

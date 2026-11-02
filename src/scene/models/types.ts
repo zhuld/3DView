@@ -13,7 +13,9 @@ export type PresetName =
   | 'bicycle'
   | 'sierpinski'
   | 'gyroscope'
-  | 'damagedHelmet';
+  | 'damagedHelmet'
+  | 'avocado'
+  | 'boomBox';
 
 /** 内置模型预设定义：颜色 + 构建/加载方式。
  * build 始终存在，可返回单一 BufferGeometry（简单模型）或 Group（多部件组合模型）。
@@ -26,7 +28,7 @@ export interface PresetDefinition {
   build: () => THREE.BufferGeometry | THREE.Group;
   material?: THREE.MeshPhysicalMaterialParameters;
   animate?: (root: THREE.Object3D, time: number) => void;
-  load?: () => Promise<THREE.Group>;
+  load?: () => Promise<THREE.Group | { scene: THREE.Group; animations?: THREE.AnimationClip[] }>;
 }
 
 /** 默认加载的预设名称。 */

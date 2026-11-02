@@ -22,6 +22,7 @@ export interface PanelHandlers {
   onPreset: (name: PresetName) => void;
   onOpenFile: (file: File) => void;
   onAutoRotate: (enabled: boolean) => void;
+  onAnimationsToggle: (enabled: boolean) => void;
   onReset: () => void;
   onCameraToggle: (enabled: boolean) => void;
 }
@@ -65,6 +66,7 @@ export class Panel {
   private readonly landmarks = element<HTMLInputElement>('opt-landmarks');
   private readonly preset = element<HTMLSelectElement>('opt-preset');
   private readonly autoRotate = element<HTMLInputElement>('opt-autorotate');
+  private readonly animations = element<HTMLInputElement>('opt-animations');
   private readonly cameraToggle = element<HTMLInputElement>('opt-camera');
   private readonly theme = element<HTMLSelectElement>('opt-theme');
   private readonly language = element<HTMLSelectElement>('opt-language');
@@ -140,6 +142,9 @@ export class Panel {
     });
     this.autoRotate.addEventListener('change', () =>
       handlers.onAutoRotate(this.autoRotate.checked),
+    );
+    this.animations.addEventListener('change', () =>
+      handlers.onAnimationsToggle(this.animations.checked),
     );
     element<HTMLButtonElement>('btn-reset').addEventListener('click', () => handlers.onReset());
 

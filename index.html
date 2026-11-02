@@ -8,10 +8,8 @@
       name="description"
       content="3D viewer with head-motion parallax and pinch-gesture rotation, powered by MediaPipe and three.js."
     />
-    <title>3DView 路 澶村姩瑙嗗樊 路 鎵嬪娍鏃嬭浆</title>
+    <title>3DView · 头动视差 · 手势旋转</title>
     <script>
-      // 鍦ㄦ牱寮忕敓鏁堝墠纭畾涓婚锛岄伩鍏嶉灞忓湪娣辫壊 / 娴呰壊涔嬮棿闂儊銆?
-      // 涓?src/ui/theme.ts 鍏辩敤鍚屼竴涓瓨鍌ㄩ敭涓庤В鏋愯鍒欍€?
       (() => {
         try {
           const stored = localStorage.getItem('3dview.theme');
@@ -37,8 +35,8 @@
       </div>
       <div class="chips">
         <span class="chip" id="chip-fps">-- FPS</span>
-        <span class="chip" id="chip-face" data-state="off" data-i18n="chip.face">闈㈤儴</span>
-        <span class="chip" id="chip-hand" data-state="off" data-i18n="chip.hand">鎵嬮儴</span>
+        <span class="chip" id="chip-face" data-state="off" data-i18n="chip.face">面部</span>
+        <span class="chip" id="chip-hand" data-state="off" data-i18n="chip.hand">手部</span>
         <span class="chip" id="chip-backend">--</span>
       </div>
       <span id="tracking-status" class="sr-only" role="status" aria-live="polite"></span>
@@ -46,54 +44,53 @@
 
     <div id="toast" hidden>
       <span id="toast-text" role="status" aria-live="polite"></span>
-      <button type="button" id="toast-close" class="toast-close" aria-label="鍏抽棴鎻愮ず" data-i18n-aria-label="toast.close">脳</button>
+      <button type="button" id="toast-close" class="toast-close" aria-label="关闭提示" data-i18n-aria-label="toast.close">脳</button>
     </div>
 
     <aside id="panel">
-      <button id="panel-toggle" class="panel-toggle" aria-expanded="true" aria-label="鏀惰捣璁剧疆闈㈡澘">
+      <button id="panel-toggle" class="panel-toggle" aria-expanded="true" aria-label="打开设置面板">
         <span></span><span></span><span></span>
       </button>
       <div class="panel-body">
         <section>
-          <h2 data-i18n="panel.parallax">澶村姩瑙嗗樊</h2>
+          <h2 data-i18n="panel.parallax">头动视差</h2>
           <label class="row switch">
             <input type="checkbox" id="opt-parallax" checked />
-            <span data-i18n="panel.parallax.enable">鍚敤</span>
+            <span data-i18n="panel.parallax.enable">启用</span>
           </label>
           <label class="row">
-            <span data-i18n="panel.parallax.gain">瑙嗗樊寮哄害</span>
+            <span data-i18n="panel.parallax.gain">视差强度</span>
             <input type="range" id="opt-gain" min="0" max="2.5" step="0.05" value="1" />
             <output id="out-gain">1.00</output>
           </label>
           <label class="row">
-            <span data-i18n="panel.parallax.distance">瑙傜湅璺濈</span>
+            <span data-i18n="panel.parallax.distance">观看距离</span>
             <input type="range" id="opt-distance" min="1.4" max="4" step="0.05" value="2.4" />
             <output id="out-distance">2.40</output>
           </label>
-          <button class="btn" id="btn-calibrate" data-i18n="panel.parallax.calibrate">閲嶆柊鏍″噯</button>
+          <button class="btn" id="btn-calibrate" data-i18n="panel.parallax.calibrate">重新校准</button>
         </section>
 
         <section>
-          <h2 data-i18n="panel.gesture">鎵嬪娍</h2>
+          <h2 data-i18n="panel.gesture">手势</h2>
           <label class="row switch">
             <input type="checkbox" id="opt-gesture" checked />
-            <span data-i18n="panel.gesture.enable">鎹忓悎鎷栨嫿鏃嬭浆</span>
+            <span data-i18n="panel.gesture.enable">捏合拖拽旋转</span>
           </label>
           <label class="row">
-            <span data-i18n="panel.gesture.sensitivity">鐏垫晱搴?/span>
+            <span data-i18n="panel.gesture.sensitivity">灵敏度</span>
             <input type="range" id="opt-sensitivity" min="0.2" max="2" step="0.05" value="1" />
             <output id="out-sensitivity">1.00</output>
           </label>
           <label class="row switch">
             <input type="checkbox" id="opt-landmarks" checked />
-            <span data-i18n="panel.gesture.landmarks">鏄剧ず鍏抽敭鐐?/span>
-          </label>
+            <span data-i18n="panel.gesture.landmarks">显示关键点</label>
         </section>
 
         <section>
-          <h2 data-i18n="panel.model">妯″瀷</h2>
+          <h2 data-i18n="panel.model">模型</h2>
           <label class="row">
-            <span data-i18n="panel.model.preset">鍐呯疆</span>
+            <span data-i18n="panel.model.preset">内置</span>
             <select id="opt-preset">
               <option value="torusKnot" data-i18n="model.torusKnot">环面纽结</option>
               <option value="helix" data-i18n="model.helix">螺旋弹簧</option>
@@ -107,47 +104,52 @@
               <option value="sierpinski" data-i18n="model.sierpinski">谢尔宾斯基四面体</option>
               <option value="gyroscope" data-i18n="model.gyroscope">陀螺仪</option>
               <option value="damagedHelmet" data-i18n="model.damagedHelmet">损伤头盔</option>
+              <option value="avocado" data-i18n="model.avocado">牛油果</option>
+              <option value="boomBox" data-i18n="model.boomBox">录音机</option>
             </select>
           </label>
-          <button class="btn" id="btn-open" data-i18n="panel.model.open">鎵撳紑鏈湴鏂囦欢鈥?/button>
+          <button class="btn" id="btn-open" data-i18n="panel.model.open">打开本地文件…</button>
           <input type="file" id="file-input" accept=".glb,.gltf,.obj" hidden />
           <label class="row switch">
             <input type="checkbox" id="opt-autorotate" />
-            <span data-i18n="panel.model.autorotate">鑷姩鏃嬭浆</span>
+            <span data-i18n="panel.model.autorotate">自动旋转</span>
           </label>
-          <button class="btn" id="btn-reset" data-i18n="panel.model.reset">閲嶇疆瑙嗚</button>
+          <label class="row switch">
+            <input type="checkbox" id="opt-animations" checked />
+            <span data-i18n="panel.model.animations">内置动画</span>
+          </label>
+          <button class="btn" id="btn-reset" data-i18n="panel.model.reset">重置视角</button>
         </section>
 
         <section>
-          <h2 data-i18n="panel.display">鏄剧ず</h2>
+          <h2 data-i18n="panel.display">显示</h2>
           <label class="row switch">
             <input type="checkbox" id="opt-ground" checked />
-            <span data-i18n="panel.display.ground">鏄剧ず鍦伴潰</span>
+            <span data-i18n="panel.display.ground">显示地面</span>
           </label>
           <label class="row switch">
             <input type="checkbox" id="opt-background" checked />
-            <span data-i18n="panel.display.background">鏄剧ず鑳屾櫙</span>
+            <span data-i18n="panel.display.background">显示背景</span>
           </label>
         </section>
 
         <section>
-          <h2 data-i18n="panel.system">绯荤粺</h2>
+          <h2 data-i18n="panel.system">系统</h2>
           <label class="row switch">
             <input type="checkbox" id="opt-camera" checked />
-            <span data-i18n="panel.system.camera">浣跨敤鎽勫儚澶?/span>
-          </label>
+            <span data-i18n="panel.system.camera">使用摄像头</label>
           <label class="row">
-            <span data-i18n="panel.system.theme">涓婚</span>
+            <span data-i18n="panel.system.theme">主题</span>
             <select id="opt-theme">
-              <option value="auto" data-i18n="theme.auto">璺熼殢绯荤粺</option>
-              <option value="dark" data-i18n="theme.dark">娣辫壊</option>
-              <option value="light" data-i18n="theme.light">娴呰壊</option>
+              <option value="auto" data-i18n="theme.auto">跟随系统</option>
+              <option value="dark" data-i18n="theme.dark">深色</option>
+              <option value="light" data-i18n="theme.light">浅色</option>
             </select>
           </label>
           <label class="row">
-            <span data-i18n="panel.system.language">璇█</span>
+            <span data-i18n="panel.system.language">语言</span>
             <select id="opt-language">
-              <option value="zh">涓枃</option>
+              <option value="zh">中文</option>
               <option value="en">English</option>
             </select>
           </label>
@@ -158,11 +160,11 @@
     <div id="preview-card" hidden>
       <div id="preview-video"></div>
       <canvas id="preview-canvas" width="240" height="180"></canvas>
-      <div class="hint" data-i18n="preview.hint">鎹忓悎鎷囨寚涓庨鎸囧苟鎷栧姩鍗冲彲鏃嬭浆</div>
+      <div class="hint" data-i18n="preview.hint">捏合拇指与食指并拖动即可旋转</div>
     </div>
 
     <div id="drop-hint" hidden>
-      <span data-i18n="drop.hint">鏉惧紑浠ヨ浇鍏ユā鍨?(.glb / .gltf / .obj)</span>
+      <span data-i18n="drop.hint">松开以载入模型 (.glb / .gltf / .obj)</span>
     </div>
 
     <script type="module" src="/src/main.ts"></script>

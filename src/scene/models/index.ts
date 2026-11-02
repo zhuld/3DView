@@ -13,6 +13,8 @@ import { bicycle } from './bicycle';
 import { sierpinski } from './sierpinski';
 import { gyroscope } from './gyroscope';
 import { damagedHelmet } from './damagedHelmet';
+import { avocado } from './avocado';
+import { boomBox } from './boomBox';
 
 export type { PresetName, PresetDefinition };
 export { DEFAULT_PRESET };
@@ -29,6 +31,8 @@ export {
   sierpinski,
   gyroscope,
   damagedHelmet,
+  avocado,
+  boomBox,
 };
 
 export const PRESETS: Record<PresetName, PresetDefinition> = {
@@ -44,5 +48,7 @@ export const PRESETS: Record<PresetName, PresetDefinition> = {
   sierpinski,
   gyroscope,
   damagedHelmet,
+  avocado,
+  boomBox,
 };
 

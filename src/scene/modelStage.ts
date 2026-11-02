@@ -34,6 +34,9 @@ export class ModelStage {
   /** 自动旋转速度（弧度/秒）。 */
   autoRotateSpeed = 0.45;
 
+  /** 是否允许模型播放自身内置动画（glTF 动画或预设动画）。 */
+  animationsEnabled = true;
+
   /**
    * 头动旋转枢轴相对模型中心向观察者方向（世界 +z）前移的距离。
    * 0 表示绕模型自身中心自转；值越大，头动时模型越像是绕靠近观察者的一点摆动。
@@ -90,7 +93,11 @@ export class ModelStage {
 
     if (definition.load) {
       try {
-        const loaded = await definition.load();
+        const loadedResult = await definition.load();
+        const loaded =
+          loadedResult instanceof THREE.Group
+            ? loadedResult
+            : loadedResult.scene;
         loaded.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             child.castShadow = true;
@@ -271,7 +278,7 @@ export class ModelStage {
 
     // 内置动画只作用在模型内部节点，不改动 group / headMotion，
     // 因此与手势旋转、自动旋转、头动视差互不覆盖。
-    if (this.animator && this.modelRoot) {
+    if (this.animationsEnabled && this.animator && this.modelRoot) {
       this.animationTime += deltaSeconds;
       this.animator(this.modelRoot, this.animationTime);
     }

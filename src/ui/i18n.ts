@@ -25,6 +25,7 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'panel.model.preset': '内置',
     'panel.model.open': '打开本地文件…',
     'panel.model.autorotate': '自动旋转',
+    'panel.model.animations': '内置动画',
     'panel.model.reset': '重置视角',
 
     'panel.display': '显示',
@@ -58,6 +59,8 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'model.sierpinski': '谢尔宾斯基四面体',
     'model.gyroscope': '陀螺仪',
     'model.damagedHelmet': '损伤头盔',
+    'model.avocado': '牛油果',
+    'model.boomBox': '录音机',
 
     'preview.hint': '捏合拇指与食指并拖动即可旋转',
     'drop.hint': '松开以载入模型 (.glb / .gltf / .obj)',
@@ -95,6 +98,7 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'panel.model.preset': 'Preset',
     'panel.model.open': 'Open local file…',
     'panel.model.autorotate': 'Auto rotate',
+    'panel.model.animations': 'Built-in animation',
     'panel.model.reset': 'Reset view',
 
     'panel.display': 'Display',
@@ -128,6 +132,8 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'model.sierpinski': 'Sierpinski tetrahedron',
     'model.gyroscope': 'Gyroscope',
     'model.damagedHelmet': 'Damaged helmet',
+    'model.avocado': 'Avocado',
+    'model.boomBox': 'Boom box',
 
     'preview.hint': 'Pinch thumb + index and drag to rotate',
     'drop.hint': 'Drop to load a model (.glb / .gltf / .obj)',
