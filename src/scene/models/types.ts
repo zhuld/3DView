@@ -12,7 +12,8 @@ export type PresetName =
   | 'lorenz'
   | 'bicycle'
   | 'sierpinski'
-  | 'gyroscope';
+  | 'gyroscope'
+  | 'damagedHelmet';
 
 /** 内置模型预设定义：颜色 + 构建/加载方式。
  * build 始终存在，可返回单一 BufferGeometry（简单模型）或 Group（多部件组合模型）。

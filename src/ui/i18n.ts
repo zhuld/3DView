@@ -57,6 +57,7 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'model.lorenz': '洛伦兹吸引子',
     'model.sierpinski': '谢尔宾斯基四面体',
     'model.gyroscope': '陀螺仪',
+    'model.damagedHelmet': '损伤头盔',
 
     'preview.hint': '捏合拇指与食指并拖动即可旋转',
     'drop.hint': '松开以载入模型 (.glb / .gltf / .obj)',
@@ -126,6 +127,7 @@ const DICTIONARIES: Record<Lang, Record<string, string>> = {
     'model.lorenz': 'Lorenz attractor',
     'model.sierpinski': 'Sierpinski tetrahedron',
     'model.gyroscope': 'Gyroscope',
+    'model.damagedHelmet': 'Damaged helmet',
 
     'preview.hint': 'Pinch thumb + index and drag to rotate',
     'drop.hint': 'Drop to load a model (.glb / .gltf / .obj)',

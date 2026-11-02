@@ -81,12 +81,56 @@ export class ModelStage {
   }
 
   /** 切换到内置预设，并释放上一个模型的资源。 */
-  setPreset(name: PresetName): void {
+  async setPreset(name: PresetName): Promise<void> {
     const definition = PRESETS[name] ?? PRESETS.torusKnot;
     this.preset = name;
     this.animator = definition.animate;
     this.animationTime = 0;
     this.clear();
+
+    if (definition.load) {
+      try {
+        const loaded = await definition.load();
+        loaded.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            const materials = Array.isArray(child.material)
+              ? child.material
+              : [child.material];
+            for (const material of materials) {
+              if (!material) continue;
+              // 避免自发光贴图把整个模型洗成白色。
+              if ('emissive' in material && material.emissive) {
+                (material.emissive as THREE.Color).set(0x000000);
+              }
+              if ('emissiveIntensity' in material) {
+                (material as { emissiveIntensity: number }).emissiveIntensity = 0;
+              }
+              if ('needsUpdate' in material) {
+                (material as { needsUpdate: boolean }).needsUpdate = true;
+              }
+              // 贴图缺失时回退到预设颜色，避免全白。
+              if (
+                'map' in material &&
+                !(material as { map?: unknown }).map &&
+                'color' in material &&
+                (material as { color?: THREE.Color }).color
+              ) {
+                (material as { color: THREE.Color }).color.setHex(definition.color);
+              }
+            }
+          }
+        });
+        const wrapper = this.fitToStage(loaded, FIT_SIZE);
+        this.holder.add(wrapper);
+        this.modelRoot = wrapper;
+        this.collect(wrapper);
+      } catch (error) {
+        console.error('[modelStage] failed to load preset model', error);
+      }
+      return;
+    }
 
     const built = definition.build();
 

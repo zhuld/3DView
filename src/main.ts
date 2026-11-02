@@ -106,7 +106,7 @@ const panel = new Panel(i18n, {
     overlay.showLandmarks = enabled;
   },
   onPreset: (name) => {
-    stage.setPreset(name);
+    void stage.setPreset(name);
   },
   onOpenFile: (file) => {
     void loadModelFile(file);

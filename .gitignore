@@ -6,5 +6,5 @@ dist/
 Thumbs.db
 
 # Downloaded at build time by scripts/fetch-assets.mjs
-public/models/
+public/models/*.task
 public/wasm/
